@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CerberusOS - Sistema do SENAI</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        senai: {
+                            blue: '#005CA9',
+                            light: '#00AEEF',
+                            white: '#FFFFFF',
+                            gray: '#F5F5F5',
+                            dark: '#1A1A1A',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F5F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #005CA9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00AEEF;
+        }
+
+        /* Base Typography */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
+            color: #1A1A1A;
+        }
+
+        /* SENAI Button Styles */
+        .senai-btn {
+            background: linear-gradient(135deg, #005CA9, #00AEEF);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 92, 169, 0.3);
+        }
+        .senai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 92, 169, 0.5);
+        }
+        .senai-btn-secondary {
+            background: #F5F5F5;
+            color: #005CA9;
+            border: 2px solid #005CA9;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px 0;
+            width: 100%;
+        }
+        .senai-btn-secondary:hover {
+            background: #005CA9;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 92, 169, 0.4);
+        }
+        .logo-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Section visibility */
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+
+        /* SENAI Button Hover Effects */
+        .senai-btn {
+            background: linear-gradient(135deg, #005CA9 0%, #00AEEF 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 92, 169, 0.3);
+        }
+        .senai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 92, 169, 0.4), 0 0 30px rgba(0, 174, 239, 0.3);
+        }
+
+        /* Error Messages */
+        .error-msg {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%);
+            color: white;
+            border: 1px solid #D32F2F;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Success Messages */
+        .success-msg {
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            color: white;
+            border: 1px solid #388E3C;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Input Focus */
+        .senai-input:focus {
+            border-color: #005CA9;
+            box-shadow: 0 0 0 3px rgba(0, 92, 169, 0.1);
+        }
+
+        /* Logo Animation */
+        .logo-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="bg-senai-white text-senai-dark font-inter antialiased min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <div class="w-full max-w-4xl senai-panel rounded-3xl overflow-hidden shadow-2xl">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-senai-blue to-senai-light p-6 text-center">
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <!-- SENAI Logo SVG White -->
+                <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-pulse">
+                    <rect x="0" y="5" width="30" height="30" rx="5" fill="white"/>
+                    <circle cx="15" cy="20" r="8" fill="#005CA9"/>
+                    <path d="M10 15 L20 15 L20 25 L10 25 Z" fill="white"/>
+                    <text x="35" y="28" font-family="Inter" font-size="24" font-weight="bold" fill="white">SENAI</text>
+                </svg>
+                <div class="text-white">
+                    <h1 class="text-2xl font-bold">CerberusOS</h1>
+                    <p class="text-sm opacity-90">Sistema do SENAI</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="p-8">
+
+            <!-- Hero / Initial -->
+            <div id="hero" class="section active text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-senai-blue mb-6">Bem-vindo ao CerberusOS</h1>
+                <p class="text-lg text-senai-dark mb-8 max-w-2xl mx-auto leading-relaxed">Sistema seguro para alunos, professores e administração do SENAI. Faça login para acessar suas funcionalidades.</p>
+                <button onclick="showSection('login')" class="senai-btn text-white px-10 py-4 rounded-xl font-semibold text-lg">
+                    Iniciar Login
+                </button>
+            </div>
+
+            <!-- Login Section -->
+            <div id="login" class="section">
+                <h2 class="text-3xl font-bold text-senai-blue mb-8 text-center">Login</h2>
+                <div class="space-y-6 max-w-md mx-auto">
+                    <div>
+                        <label class="block text-sm font-semibold text-senai-dark mb-2">ID:</label>
+                        <input type="number" id="id" class="senai-input w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-3 text-senai-dark focus:border-senai-blue focus:outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-senai-dark mb-2">Senha:</label>
+                        <input type="password" id="senha" class="senai-input w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-3 text-senai-dark focus:border-senai-blue focus:outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-senai-dark mb-2">Horário Atual (0-23):</label>
+                        <input type="number" id="hora" min="0" max="23" class="senai-input w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-3 text-senai-dark focus:border-senai-blue focus:outline-none transition-all">
+                    </div>
+                    <button onclick="verificarDados()" class="senai-btn w-full text-white py-4 rounded-xl font-semibold text-lg">
+                        Verificar Dados
+                    </button>
+                    <div id="login-result" class="mt-6 p-4 rounded-xl text-sm"></div>
+                </div>
+            </div>
+
+            <!-- Captcha Section -->
+            <div id="captcha" class="section">
+                <h2 class="text-3xl font-bold text-senai-blue mb-8 text-center">Desafio de Segurança</h2>
+                <div class="max-w-md mx-auto text-center">
+                    <p class="text-senai-dark mb-8 text-lg">Calcule: (ID × 2) - Hora Atual</p>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-senai-dark mb-2">Resultado:</label>
+                        <input type="number" id="captcha-input" class="senai-input w-full bg-white border-2 border-gray-300 rounded-xl px-4 py-3 text-senai-dark focus:border-senai-blue focus:outline-none transition-all">
+                    </div>
+                    <button onclick="validarCaptcha()" class="senai-btn w-full text-white py-4 rounded-xl font-semibold text-lg">
+                        Entrar
+                    </button>
+                    <div id="captcha-result" class="mt-6 p-4 rounded-xl text-sm"></div>
+                </div>
+            </div>
+
+            <!-- Menu Principal -->
+            <div id="menu" class="section">
+                <h2 class="text-3xl font-bold text-senai-blue mb-8 text-center">Menu Principal</h2>
+
+                <div id="menu-buttons" class="space-y-4 mb-8"></div>
+
+                <button onclick="logout()" class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                    Sair
+                </button>
+
+                <div id="menu-result" class="mt-8 p-6 bg-senai-gray rounded-xl"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let usuario = null;
+        let id, senha, hora;
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('open');
+        }
+
+        function showUserMenu() {
+            const menuButtons = document.getElementById('menu-buttons');
+            if (usuario === 'aluno') {
+                menuButtons.innerHTML = `
+                    <button onclick="showMediaForm()" class="senai-btn-secondary">📊 Calcular Média</button>
+                    <button onclick="showMensalidadeForm()" class="senai-btn-secondary">💰 Simulador de Mensalidade</button>
+                `;
+            } else if (usuario === 'professor') {
+                menuButtons.innerHTML = `
+                    <button onclick="showAdicionalForm()" class="senai-btn-secondary">🌙 Adicional Noturno</button>
+                    <button onclick="showTurmaForm()" class="senai-btn-secondary">🏫 Classificar Turma</button>
+                `;
+            } else if (usuario === 'admin') {
+                menuButtons.innerHTML = `
+                    <button onclick="showBalancoForm()" class="senai-btn-secondary">📈 Balanço Financeiro</button>
+                `;
+            }
+        }
+
+        function verificarDados() {
+            id = parseInt(document.getElementById('id').value);
+            senha = document.getElementById('senha').value;
+            hora = parseInt(document.getElementById('hora').value);
+            const resultDiv = document.getElementById('login-result');
+
+            if (isNaN(id) || isNaN(hora) || hora < 0 || hora > 23 || !senha) {
+                resultDiv.className = 'mt-4 p-3 rounded-lg text-sm bg-red-900/50 text-red-300 border border-red-800';
+                resultDiv.textContent = 'Dados inválidos. Verifique os campos.';
+                return;
+            }
+
+            let isValidUser = false;
+            if (id >= 1000 && id <= 1999 && senha === 'aluno123') {
+                isValidUser = true;
+            } else if (id >= 2000 && id <= 2999 && senha === 'prof2026') {
+                isValidUser = true;
+            } else if (id === 9999 && senha === 'adminSENAI') {
+                isValidUser = true;
+            }
+
+            if (!isValidUser) {
+                resultDiv.className = 'mt-4 p-3 rounded-lg text-sm bg-red-900/50 text-red-300 border border-red-800';
+                resultDiv.textContent = 'Credenciais inválidas.';
+                return;
+            }
+
+            resultDiv.className = 'mt-4 p-3 rounded-lg text-sm bg-green-900/50 text-green-300 border border-green-800';
+            resultDiv.textContent = 'Dados verificados. Responda ao desafio de segurança.';
+            showSection('captcha');
+        }
+
+        function validarCaptcha() {
+            const captchaInput = parseInt(document.getElementById('captcha-input').value);
+            const resultDiv = document.getElementById('captcha-result');
+
+            if (isNaN(captchaInput)) {
+                resultDiv.className = 'mt-4 p-3 rounded-lg text-sm bg-red-900/50 text-red-300 border border-red-800';
+                resultDiv.textContent = 'Digite o resultado do captcha.';
+                return;
+            }
+
+            const captcha = id * 2 - hora;
+            if (captchaInput !== captcha) {
+                resultDiv.className = 'mt-4 p-3 rounded-lg text-sm bg-red-900/50 text-red-300 border border-red-800';
+                resultDiv.textContent = 'Erro de Segurança: Captcha incorreto.';
+                return;
+            }
+
+            if (id >= 1000 && id <= 1999 && senha === 'aluno123') {
+                if (hora < 8 || hora > 22) {
+                    resultDiv.className = 'mt-4 p-3 rounded-lg text-sm bg-red-900/50 text-red-300 border border-red-800';
+                    resultDiv.textContent = 'Acesso negado. Fora do horário (8-22).';
+                    return;
+                }
+                usuario = 'aluno';
+            } else if (id >= 2000 && id <= 2999 && senha === 'prof2026') {
+                usuario = 'professor';
+            } else if (id === 9999 && senha === 'adminSENAI') {
+                usuario = 'admin';
+            }
+
+            showUserMenu();
+            showSection('menu');
+        }
+
+        function logout() {
+            usuario = null;
+            document.querySelectorAll('input').forEach(inp => inp.value = '');
+            document.querySelectorAll('#menu-result').forEach(res => res.textContent = '');
+            // Ocultar todos os menus
+            document.getElementById('aluno-menu').style.display = 'none';
+            document.getElementById('professor-menu').style.display = 'none';
+            document.getElementById('admin-menu').style.display = 'none';
+            showSection('hero');
+        }
+
+        function showMediaForm() {
+            const resultDiv = document.getElementById('menu-result');
+            resultDiv.innerHTML = `
+                <label class="block text-sm font-medium text-stone-300 mb-2">Nota 1:</label>
+                <input type="number" id="n1" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-3">
+                <label class="block text-sm font-medium text-stone-300 mb-2">Nota 2:</label>
+                <input type="number" id="n2" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-3">
+                <label class="block text-sm font-medium text-stone-300 mb-2">Nota 3:</label>
+                <input type="number" id="n3" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-4">
+                <button onclick="calcularMedia()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium">Calcular</button>
+            `;
+        }
+
+        function calcularMedia() {
+            const n1 = parseFloat(document.getElementById('n1').value);
+            const n2 = parseFloat(document.getElementById('n2').value);
+            const n3 = parseFloat(document.getElementById('n3').value);
+            const resultDiv = document.getElementById('menu-result');
+
+            if (isNaN(n1) || isNaN(n2) || isNaN(n3)) {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Notas inválidas.</div>';
+                return;
+            }
+
+            const media = ((n1 + n2 + n3) / 3).toFixed(2);
+            let situacao;
+            if (media >= 7) situacao = 'Aprovado(a)';
+            else if (media >= 5) situacao = 'Em recuperação';
+            else situacao = 'Reprovado(a)';
+
+            resultDiv.innerHTML = `<div class="p-3 rounded bg-green-900/50 text-green-300 border border-green-800">Média: ${media}<br>Situação: ${situacao}</div>`;
+        }
+
+        function showMensalidadeForm() {
+            const resultDiv = document.getElementById('menu-result');
+            resultDiv.innerHTML = `
+                <label class="block text-sm font-medium text-stone-300 mb-2">Valor da Mensalidade:</label>
+                <input type="number" id="mensalidade" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-3">
+                <label class="block text-sm font-medium text-stone-300 mb-2">Pagar adiantado? (S/N):</label>
+                <input type="text" id="adiantado" maxlength="1" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-4">
+                <button onclick="simularMensalidade()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium">Simular</button>
+            `;
+        }
+
+        function simularMensalidade() {
+            const mensalidade = parseFloat(document.getElementById('mensalidade').value);
+            const adiantado = document.getElementById('adiantado').value.toUpperCase();
+            const resultDiv = document.getElementById('menu-result');
+
+            if (isNaN(mensalidade) || mensalidade <= 0) {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Valor inválido.</div>';
+                return;
+            }
+
+            if (adiantado === 'S') {
+                const desconto = mensalidade * 0.1;
+                const novoValor = (mensalidade - desconto).toFixed(2);
+                resultDiv.innerHTML = `<div class="p-3 rounded bg-green-900/50 text-green-300 border border-green-800">Novo valor: R$ ${novoValor}</div>`;
+            } else if (adiantado === 'N') {
+                resultDiv.innerHTML = `<div class="p-3 rounded bg-green-900/50 text-green-300 border border-green-800">Valor: R$ ${mensalidade.toFixed(2)}</div>`;
+            } else {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Opção inválida.</div>';
+            }
+        }
+
+        function showAdicionalForm() {
+            const resultDiv = document.getElementById('menu-result');
+            resultDiv.innerHTML = `
+                <label class="block text-sm font-medium text-stone-300 mb-2">Salário Base:</label>
+                <input type="number" id="salario_base" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-3">
+                <label class="block text-sm font-medium text-stone-300 mb-2">Aulas Noturnas:</label>
+                <input type="number" id="aulas_noturnas" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-4">
+                <button onclick="calcularAdicional()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium">Calcular</button>
+            `;
+        }
+
+        function calcularAdicional() {
+            const salarioBase = parseFloat(document.getElementById('salario_base').value);
+            const aulas = parseInt(document.getElementById('aulas_noturnas').value);
+            const resultDiv = document.getElementById('menu-result');
+
+            if (isNaN(salarioBase) || isNaN(aulas) || salarioBase < 0 || aulas < 0) {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Valores inválidos.</div>';
+                return;
+            }
+
+            const total = (salarioBase + aulas * 50).toFixed(2);
+            resultDiv.innerHTML = `<div class="p-3 rounded bg-green-900/50 text-green-300 border border-green-800">Salário Total: R$ ${total}</div>`;
+        }
+
+        function showTurmaForm() {
+            const resultDiv = document.getElementById('menu-result');
+            resultDiv.innerHTML = `
+                <label class="block text-sm font-medium text-stone-300 mb-2">Média da Turma:</label>
+                <input type="number" id="media_turma" step="0.01" min="0" max="10" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-4">
+                <button onclick="classificarTurma()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium">Classificar</button>
+            `;
+        }
+
+        function classificarTurma() {
+            const media = parseFloat(document.getElementById('media_turma').value);
+            const resultDiv = document.getElementById('menu-result');
+
+            if (isNaN(media) || media < 0 || media > 10) {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Média inválida.</div>';
+                return;
+            }
+
+            const classificacao = media >= 8 ? 'Excelente' : 'Em Atenção';
+            resultDiv.innerHTML = `<div class="p-3 rounded bg-green-900/50 text-green-300 border border-green-800">Turma: ${classificacao}</div>`;
+        }
+
+        function showBalancoForm() {
+            const resultDiv = document.getElementById('menu-result');
+            resultDiv.innerHTML = `
+                <label class="block text-sm font-medium text-stone-300 mb-2">Receitas:</label>
+                <input type="number" id="receitas" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-3">
+                <label class="block text-sm font-medium text-stone-300 mb-2">Despesas:</label>
+                <input type="number" id="despesas" step="0.01" class="w-full bg-stone-800 border border-stone-700 rounded px-3 py-2 text-stone-200 mb-4">
+                <button onclick="calcularBalanco()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-medium">Calcular</button>
+            `;
+        }
+
+        function calcularBalanco() {
+            const receitas = parseFloat(document.getElementById('receitas').value);
+            const despesas = parseFloat(document.getElementById('despesas').value);
+            const resultDiv = document.getElementById('menu-result');
+
+            if (isNaN(receitas) || isNaN(despesas) || receitas < 0 || despesas < 0) {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Valores inválidos.</div>';
+                return;
+            }
+
+            if (receitas > despesas) {
+                const lucro = (receitas - despesas).toFixed(2);
+                resultDiv.innerHTML = `<div class="p-3 rounded bg-green-900/50 text-green-300 border border-green-800">Lucro: R$ ${lucro}</div>`;
+            } else if (despesas > receitas) {
+                const prejuizo = (despesas - receitas).toFixed(2);
+                resultDiv.innerHTML = `<div class="p-3 rounded bg-red-900/50 text-red-300 border border-red-800">Prejuízo: R$ ${prejuizo}</div>`;
+            } else {
+                resultDiv.innerHTML = '<div class="p-3 rounded bg-stone-800/50 text-stone-300 border border-stone-700">Saldo Zero.</div>';
+            }
+        }
+    </script>
+</body>
+</html>
